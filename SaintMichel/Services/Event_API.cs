@@ -77,17 +77,17 @@ namespace SaintMichel.Services
             }
         }
 
-        public async Task<List<Event>> GetEventByDateAsync(DateTime date)
+        public async Task<List<Event>> GetEventByAreaAsync(string Ville)
 {
     using (HttpClient client = new HttpClient())
     {
         try
         {
             // Formatage de la date pour l'URL (exemple : "2024-10-01")
-            string formattedDate = date.ToString("yyyy-MM-dd");
+            //string formattedDate = Ville.ToString("yyyy-MM-dd");
 
             // Construire l'URL avec la date directement dans le chemin
-            string url = $"{_baseUrl}/GetEventByDate/{formattedDate}";
+            string url = $"{_baseUrl}/GetEventByArea/{Ville}";
 
             // Effectuer la requête GET
             HttpResponseMessage response = await client.GetAsync(url);
@@ -104,7 +104,7 @@ namespace SaintMichel.Services
         catch (Exception ex)
         {
             // Gérer les erreurs, par exemple journaliser l'exception
-            Console.WriteLine($"Erreur lors de la récupération des événements : {ex.Message}");
+            Console.WriteLine($"Pas d'Event dans cette Ville =) : {ex.Message}");
             return null;
         }
     }

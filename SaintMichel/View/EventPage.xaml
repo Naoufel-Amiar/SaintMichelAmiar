@@ -12,26 +12,81 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="0.2*"/>
             <RowDefinition Height="0.3*"/>
             <RowDefinition Height="*"/>
-
         </Grid.RowDefinitions>
 
-        <!-- Titre -->
-        <Label Text="Liste des événements a venir " 
-               FontSize="20" 
-               HorizontalOptions="Center" 
-               VerticalOptions="Center"
-               Grid.Row="0" />
 
-            <!-- Titre -->
-        <Entry
+        <Label Text="Liste des événements a venir " 
+            FontSize="20" 
+            HorizontalOptions="Center" 
+            VerticalOptions="Center"
+            Grid.Row="0" 
+        />
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.7*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <Entry
             Placeholder="Entrez votre texte ici"
-            Grid.Row="1"
+            Text="{Binding UserInput, Mode=TwoWay}"
+            Grid.Column="1"
+                WidthRequest="200"  
+                HeightRequest="50"     
+                HorizontalOptions="Center"           
+                VerticalOptions="Center"
             />
+
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5*"/>
+                    <RowDefinition Height="0.5*"/>
+                </Grid.RowDefinitions>
+
+
+                <Button
+                    Grid.Row="0"
+                    x:Name="CityBtn" 
+                    Text="Ville"
+                    Command="{Binding LoadSearchByCityBtnCommand}"
         
+                    HorizontalOptions="Fill" 
+                    VerticalOptions="Center"
+                    WidthRequest="150"
+                    BackgroundColor="#FBAF00"
+                    TextColor="#3F403F"
+                    FontSize="18"
+                    FontAttributes="Bold"
+                    CornerRadius="10"
+                    Padding="10"
+                    BorderWidth="5"
+                />
+
+                <Button
+                    Grid.Row="1"
+                    x:Name="ResetBtn" 
+                    Text="Sans Filtre"
+                    Command="{Binding ResetBtnCommand}"
         
+                    HorizontalOptions="Fill" 
+                    VerticalOptions="Center"
+                    WidthRequest="150"
+                    BackgroundColor="#FBAF00"
+                    TextColor="#3F403F"
+                    FontSize="18"
+                    FontAttributes="Bold"
+                    CornerRadius="10"
+                    Padding="10"
+                    BorderWidth="5"
+                />
+
+            </Grid>
+
+        </Grid>
 
         <!-- Liste des événements -->
         <ListView x:Name="EventListView"
@@ -39,54 +94,53 @@
                   IsPullToRefreshEnabled="True" 
                   RefreshCommand="{Binding LoadItemsEventCommand}"
                   IsRefreshing="{Binding IsBusy, Mode=TwoWay}"
-                  Margin="10"
+                  Margin="15"
                   Grid.Row="2"
-                  MinimumHeightRequest="300"
-                  MaximumHeightRequest="400"
-                  WidthRequest="450">
+                  HorizontalOptions="FillAndExpand"
+                  VerticalOptions="FillAndExpand">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
                         <Border 
-                            Margin="5" Padding="10"  HeightRequest="100" WidthRequest="300"  HorizontalOptions="FillAndExpand">
+                            Margin="10" Padding="10" WidthRequest="400"  BackgroundColor="LightSalmon" Stroke="#DADADA"  StrokeThickness="2" HorizontalOptions="FillAndExpand">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="0.5*" />
-                                    <RowDefinition Height="2*" />
-                                    <RowDefinition Height="3*" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
                                 <!-- Titre de l'événement -->
                                 <Label Text="{Binding Name}" 
                                        FontSize="14" 
                                        FontAttributes="Bold" 
+                                       TextColor="#333333"
+                                       Margin="2"
                                        Grid.Column="0" 
                                        Grid.Row="0" 
-                                       Grid.ColumnSpan="2" 
                                        />
-                                
-                                <Label Text="" Grid.Column="0" 
-                                    Grid.Row="1" 
-                                    Grid.ColumnSpan="2" />
-                                
+
                                 <!-- Date -->
                                 <Label Text="{Binding Date}" 
                                        FontSize="12" 
+                                       TextColor="#999999"
                                        Grid.Column="1" 
-                                       Grid.Row="2" 
+                                       Grid.Row="1" 
+                                       Margin="2"
                                        HorizontalOptions="End"
                                        />
 
                                 <!-- Description -->
                                 <Label Text="{Binding Description}" 
                                        FontSize="14" 
+                                       TextColor="#555555"
+                                       Margin="2"
                                        Grid.Column="0" 
                                        Grid.Row="2" 
-                                       Grid.ColumnSpan="2" 
                                        />
                             </Grid>
                         </Border>
