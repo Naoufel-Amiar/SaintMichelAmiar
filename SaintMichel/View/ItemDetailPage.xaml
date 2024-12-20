@@ -7,12 +7,7 @@
              xmlns:viewmodel="clr-namespace:SaintMichel.ViewModel"
              xmlns:model="clr-namespace:SaintMichel.Model"
              Title="ItemDetailPage">
-    
-    
-    <Shell.BackButtonBehavior>
-        <BackButtonBehavior IsVisible="False" />
-    </Shell.BackButtonBehavior>
-    
+
     <StackLayout Spacing="20" Padding="15">
         <Label Text="Title:" FontSize="Medium" />
         <Label Text="{Binding Title}" FontSize="Small"/>
