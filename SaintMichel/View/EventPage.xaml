@@ -1,216 +1,120 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="SaintMichel.View.EventPage"
-             Title="EventPage"
-             xmlns:vm="clr-namespace:SaintMichel.ViewModel">
-
-    <!-- Liez cette page à un ViewModel -->
-    <!--<ContentPage.BindingContext>
-<vm:EventPageViewModel />
-</ContentPage.BindingContext>-->
+             xmlns:vm="clr-namespace:SaintMichel.ViewModel"
+             Title="Événements">
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.2*"/>
-            <RowDefinition Height="0.3*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="3*" />
         </Grid.RowDefinitions>
 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.1*" />
+            <ColumnDefinition Width="0.5*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="0.5*" />
+            <ColumnDefinition Width="0.1*" />
+        </Grid.ColumnDefinitions>
 
-        <Label Text="Liste des événements a venir " 
-            FontSize="20" 
-            HorizontalOptions="Center" 
-            VerticalOptions="Center"
-            Grid.Row="0" 
-        />
+        <!-- Zone des filtres -->
+        <Border Grid.Row="0" Grid.Column="2" VerticalOptions="Center">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10"/>
+            </Border.StrokeShape>
+            <DatePicker VerticalOptions="Center" FontSize="14" Date="{Binding SelectedDate}" />
+        </Border>
 
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+        <Border Grid.Row="0" Grid.Column="3" VerticalOptions="Center">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10"/>
+            </Border.StrokeShape>
+            <Entry Placeholder="Ville" Text="{Binding UserInput}" FontSize="14"/>
+        </Border>
 
-            <!-- DatePicker pour la sélection de date -->
-            <DatePicker
-                Grid.Column="0"
-                FontSize="20"
-                Date="{Binding SelectedDate, Mode=TwoWay}"
-                HorizontalOptions="CenterAndExpand"
-                IsEnabled="True" 
-            />
+        <VerticalStackLayout Grid.Row="0" Grid.Column="4" VerticalOptions="Center" Spacing="5">
+            <Button Text="Filtrer par Ville" Command="{Binding LoadSearchByCityBtnCommand}" FontSize="12"/>
+            <Button Text="Réinitialiser" Command="{Binding ResetBtnCommand}" FontSize="12"/>
+            <Button Text="Filtrer par Date" Command="{Binding LoadSearchByDateBtnCommand}" FontSize="12"/>
+        </VerticalStackLayout>
 
-            <!-- Boutons -->
-            <Grid Grid.Column="1">
+        <!-- Zone de la liste -->
+        <Border BackgroundColor="Orange" Padding="0" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="5">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="20"/>
+            </Border.StrokeShape>
+            <Grid Background="Orange">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="0.5*" />
+                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="0.1*" />
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="0.1*" />
                 </Grid.RowDefinitions>
 
-                <Button
-                    Grid.Row="0"
-                    Text="Ville"
-                    Command="{Binding LoadSearchByCityBtnCommand}"
-                    Style="{StaticResource StyledButton}" 
-                />
+                <Grid Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3">
+                    <RefreshView IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+                        <CollectionView ItemsSource="{Binding ObsItemsEvents}" 
+                                        SelectionMode="Single"
+                                        SelectedItem="{Binding SelectedItem}"
+                                        SelectionChangedCommand="{Binding EventSelectedCommand}">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+                            </CollectionView.ItemsLayout>
 
-                <Button
-                    Grid.Row="1"
-                    Text="Sans Filtre"
-                    Command="{Binding ResetBtnCommand}"
-                    Style="{StaticResource StyledButton}"
-                />
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame Margin="0,0,0,10" Padding="10" HasShadow="False" BorderColor="LightGray" CornerRadius="5">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="0.5*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="0.7*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*" />
+                                                <RowDefinition Height="*" />
+                                                <RowDefinition Height="*" />
+                                                <RowDefinition Height="*" />
+                                            </Grid.RowDefinitions>
 
-                <Button
-                    Grid.Row="2"
-                    Text="Date"
-                    Command="{Binding LoadSearchByDateBtnCommand}"
-                    Style="{StaticResource StyledButton}"
-                />      
+                                            <Label Text="{Binding Name}" 
+                                                   FontSize="16"
+                                                   FontAttributes="Bold"
+                                                   Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"/>
+
+                                            <Label Text="{Binding Date}" 
+                                                   FontSize="14"
+                                                   TextColor="DarkGreen"
+                                                   Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"/>
+
+                                            <Label Text="{Binding Description}" 
+                                                   FontSize="13"
+                                                   TextColor="Red"
+                                                   Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3"/>
+
+                                            <Label Text="{Binding Lieu}" 
+                                                   FontSize="12"
+                                                   TextColor="Blue"
+                                                   Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3"/>           
+
+                                        </Grid>
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </RefreshView>
+                </Grid>
             </Grid>
-
-            <!-- Entry pour la ville -->
-            <Entry
-                Grid.Column="2"
-                Placeholder="Entrez votre Ville ici"
-                Text="{Binding UserInput}"
-                Style="{StaticResource OrangeEntryStyle}"
-
-                HorizontalOptions="Center"
-                VerticalOptions="Center"
-            />
-            
-        </Grid>
-
-        <RefreshView
-        Grid.Row="2"
-         IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
-
-
-            <!-- Liste des événements -->
-            <CollectionView x:Name="EventListView"
-                ItemsSource="{Binding ObsItemsEvents}" 
-                SelectionMode="Single" SelectedItem="{Binding SelectedItem}"
-                SelectionChangedCommand="{Binding EventSelectedCommand}"
-                ItemSizingStrategy="MeasureFirstItem"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="FillAndExpand">
-
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-
-                        <Border WidthRequest="400" BackgroundColor="LightSalmon" Stroke="#DADADA" StrokeThickness="2">
-                            <Grid HeightRequest="80">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-
-                                <!-- Titre -->
-                                <Label Text="{Binding Name}" 
-                                   FontSize="14" 
-                                   FontAttributes="Bold" 
-                                   TextColor="#333333"
-                                   Grid.Column="0" 
-                                   Grid.Row="0"
-                                   HorizontalOptions="Center" 
-                                   VerticalOptions="Center" />
-
-                                <!-- Date -->
-                                <Label Text="{Binding Date}" 
-                                   FontSize="12" 
-                                   TextColor="DarkGreen"
-                                   Grid.Column="1" 
-                                   Grid.Row="1"
-                                   HorizontalOptions="Center" 
-                                   VerticalOptions="Center" />
-
-                                <!-- Description -->
-                                <Label Text="{Binding Description}" 
-                                   FontSize="12" 
-                                   TextColor="Red"
-                                   Grid.Column="0" 
-                                   Grid.Row="2"
-                                   HorizontalOptions="Center" 
-                                   VerticalOptions="Center" />
-                            </Grid>
-                        </Border>
-
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </RefreshView>    
+        </Border>
     </Grid>
-
-
-
-    <ContentPage.Resources>
-        <!-- Style pour le DatePicker -->
-        <Style TargetType="DatePicker">
-            <Setter Property="TextColor" Value="#FF6F00" />
-            <!-- Couleur texte orange foncé -->
-            <Setter Property="BackgroundColor" Value="#FFE0B2" />
-            <!-- Fond orange clair -->
-            <Setter Property="HeightRequest" Value="50" />
-            <Setter Property="Margin" Value="0,10,0,0" />
-            <Setter Property="HorizontalOptions" Value="Fill" />
-        </Style>
-
-
-        <Style TargetType="Button" x:Key="StyledButton">
-
-            <Setter Property="Margin" Value="5" />
-            <!-- Espacement autour -->
-            <Setter Property="HorizontalOptions" Value="Center" />
-            <!-- Centrer horizontalement -->
-            <Setter Property="VerticalOptions" Value="Center" />
-            <!-- Centrer verticalement -->
-            <Setter Property="BackgroundColor" Value="#FBAF00" />
-            <!-- Couleur de fond -->
-            <Setter Property="TextColor" Value="#3F403F" />
-            <!-- Couleur du texte -->
-            <!-- Taille de la police -->
-            <Setter Property="FontAttributes" Value="Bold" />
-            <!-- Texte en gras -->
-            <Setter Property="CornerRadius" Value="12" />
-            <!-- Coins arrondis -->
-        </Style>
-
-        <Style x:Key="OrangeEntryStyle" TargetType="Entry">
-            <!-- Couleur du texte -->
-            <Setter Property="TextColor" Value="#FF6F00" />
-            <!-- Orange foncé -->
-
-            <!-- Couleur du placeholder -->
-            <Setter Property="PlaceholderColor" Value="#FFA726" />
-            <!-- Orange clair -->
-
-            <!-- Fond -->
-            <Setter Property="BackgroundColor" Value="#FFF3E0" />
-            <!-- Fond orange pâle -->
-
-
-
-            <!-- Alignement -->
-            <Setter Property="HorizontalOptions" Value="FillAndExpand" />
-            <Setter Property="VerticalOptions" Value="Center" />
-
-            <!-- Marges -->
-            <Setter Property="Margin" Value="10,5,10,5" />
-
-            <!-- Police -->
-            <Setter Property="FontSize" Value="16" />
-            <Setter Property="FontAttributes" Value="Bold" />
-        </Style>
-
-    </ContentPage.Resources>
-
 </ContentPage>

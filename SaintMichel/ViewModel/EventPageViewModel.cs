@@ -210,7 +210,7 @@ namespace SaintMichel.ViewModel
             {
                 return;
             }
-            await Shell.Current.GoToAsync($"{nameof(EventDetailPage)}?{nameof(EventDetailPageViewModel.IDevent)}={SelectedItem.IDevent}");
+            await Shell.Current.GoToAsync($"{nameof(EventDetailPage)}?{nameof(EventDetailPageViewModel.IDEvent)}={SelectedItem.IDevent}");
         }
 
     }

@@ -2,59 +2,54 @@
 using System;
 namespace SaintMichel.ViewModel
 {
-    [QueryProperty(nameof(IDevent), nameof(IDevent))]
-
+    [QueryProperty(nameof(IDEvent), nameof(IDEvent))]
     public partial class EventDetailPageViewModel : BaseViewModel
     {
-        public int IDevent { get; set; }
+        private int _idEvent;
 
-        private readonly Event_API _eventApi;
-
-
-        [ObservableProperty]
-        private ObservableCollection<Event> _obsItems;
-
-
-        public EventDetailPageViewModel(Event_API eventApi)
+        public int IDEvent
         {
-            _eventApi = eventApi; // Injection de dépendance
-            ObsItems = new ObservableCollection<Event>();
-
+            get => _idEvent;
+            set
+            {
+                if (_idEvent != value)
+                {
+                    _idEvent = value;
+                    OnPropertyChanged();
+                    LoadEvent(); // ← appel automatique
+                }
+            }
         }
 
-      
+        [ObservableProperty]
+        private ObservableCollection<Event> obsItems = new();
 
-        private async Task LoadEventDetails(string eventId)
+        private readonly Event_API _api;
+
+        public EventDetailPageViewModel(Event_API api)
         {
+            _api = api;
+        }
+
+        private async void LoadEvent()
+        {
+            IsBusy = true;
             try
             {
-                var items = (await _eventApi.GetEventAsync()).FirstOrDefault(item => item.IDevent == IDevent);
-                ObsItems.Add(items);
-
-                //if (eventDetails != null)
-                //{
-
-
-                //    // Convertir la chaîne en DateTime
-                //    if (DateTime.TryParse(eventDetails.Date, out var parsedDate))
-                //    {
-                //        Date = parsedDate;
-                //    }
-                //    else
-                //    {
-                //        Debug.WriteLine($"Impossible de convertir la date : {eventDetails.Date}");
-                //    }
-                //}
-                //else
-                //{
-                //    Debug.WriteLine($"Aucun événement trouvé avec l'ID : {eventId}");
-                //}
+                ObsItems.Clear();
+                var item = await _api.GetEventByIdAsync(IDEvent.ToString());
+                if (item != null)
+                    ObsItems.Add(item);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Erreur lors du chargement des détails de l'événement : {ex.Message}");
+                Console.WriteLine($"Erreur : {ex.Message}");
+                await Application.Current.MainPage.DisplayAlert("Erreur", "Impossible de charger l'événement", "OK");
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
     }
-
 }
