@@ -29,7 +29,7 @@ namespace SaintMichel.ViewModel
 
             _EventApi = apievent;
             ObsItemsEvents = new ObservableCollection<Event>(); // Initialisation de la collection Observable
-            OnAppearing();
+
         }
 
         // Méthode pour charger les éléments depuis l'API
@@ -40,39 +40,48 @@ namespace SaintMichel.ViewModel
         }
 
         [RelayCommand]
-        async Task LoadItemsEvent()
+        public async Task LoadItemsEvent()
         {
-
             IsBusy = true;
             try
             {
                 ObsItemsEvents.Clear();
-                //DateTime selectedDate = new DateTime(2024, 10, 01);
-                //var items = await _EventApi.GetEventByDateAsync(selectedDate);                 //Commenter ligne 35 et 36 pour par date et 39 pour All
-
 
                 var items = await _EventApi.GetEventAsync();
 
-                if (items != null) // Vérification si des données ont été récupérées
+                if (items != null)
                 {
-                    foreach (var item in items)
+                    // Filtrer les événements à venir (Date >= aujourd’hui)
+                    var upcomingEvents = items
+                        .Where(item =>
+                        {
+                            if (DateTime.TryParse(item.Date, out DateTime eventDate))
+                                return eventDate >= DateTime.Now;
+                            return false;
+                        })
+                        .OrderBy(item => DateTime.Parse(item.Date)) // Optionnel : tri par date croissante
+                        .ToList();
+
+                    foreach (var item in upcomingEvents)
                     {
                         ObsItemsEvents.Add(item);
+                    }
+
+                    if (upcomingEvents.Count == 0)
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Information", "Aucun événement à venir trouvé.", "OK");
                     }
                 }
                 else
                 {
-                    await Application.Current.MainPage.DisplayAlert("Information", "Aucun événement trouvé pour cette date.", "OK");
+                    await Application.Current.MainPage.DisplayAlert("Information", "Aucun événement trouvé.", "OK");
                 }
-
-
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erreur: {ex.Message}"); // Afficher les erreurs dans la console
-                await Application.Current.MainPage.DisplayAlert("Erreur", "Donnée Non recuperer", "OK");
+                Console.WriteLine($"Erreur: {ex.Message}");
+                await Application.Current.MainPage.DisplayAlert("Erreur", "Données non récupérées.", "OK");
             }
-
             finally
             {
                 IsBusy = false;
@@ -122,7 +131,7 @@ namespace SaintMichel.ViewModel
             }
         }
 
-        
+
 
         [RelayCommand]
         async Task ResetBtn()
@@ -136,7 +145,7 @@ namespace SaintMichel.ViewModel
                 ObsItemsEvents.Clear();
                 //DateTime selectedDate = new DateTime(2024, 10, 01);
                 //var items = await _EventApi.GetEventByDateAsync(selectedDate);                 
- 
+
                 var items = await _EventApi.GetEventAsync();
 
                 if (items != null) // Vérification si des données ont été récupérées

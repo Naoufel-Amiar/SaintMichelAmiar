@@ -21,6 +21,8 @@ namespace SaintMichel.ViewModel
             }
         }
 
+
+
         [ObservableProperty]
         private ObservableCollection<Event> obsItems = new();
 

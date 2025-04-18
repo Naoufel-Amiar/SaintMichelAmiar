@@ -2,11 +2,9 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SaintMichel.View.EventDetailPage"
-             Title="EventDetailPage">
+             Title="Détail de l'Événement">
 
-
-
-    <Grid>
+    <Grid BackgroundColor="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
             <RowDefinition Height="*"/>
@@ -16,76 +14,63 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="0.5*"/>
         </Grid.ColumnDefinitions>
-        <Frame Grid.Row="1" Grid.Column="1" Padding="20" BackgroundColor="Orange" CornerRadius="20">
-            <StackLayout Spacing="15">
-                <RefreshView IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
-                    <ListView x:Name="OffreProListView"
-                          ItemsSource="{Binding ObsItems}"
-                          IsPullToRefreshEnabled="True"
-                          RefreshCommand="{Binding LoadEventDetails}">
 
-                        <ListView.ItemTemplate>
+        <!-- Bouton Retour -->
+        <!--<Button Text="← Retour"
+                Grid.Row="0"
+                Grid.Column="1"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                BackgroundColor="Transparent"
+                TextColor="Orange"
+                FontSize="20"
+                Command="{Binding ClosePageCommand}"
+                BorderColor="Orange"
+                BorderWidth="1"
+                Padding="10"
+                CornerRadius="25"
+                FontAttributes="Bold"/>-->
+
+        <!-- Bloc de détails -->
+        <Frame Grid.Row="1" Grid.Column="1" Padding="20" BackgroundColor="#FF5722" CornerRadius="20" HasShadow="True">
+            <StackLayout Spacing="20" Padding="20">
+                <RefreshView IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+                    <CollectionView ItemsSource="{Binding ObsItems}"
+                                    SelectionMode="None">
+
+                        <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <ViewCell>
+                                <Frame BorderColor="Orange" Padding="15" Margin="0,5,0,5" BackgroundColor="White" CornerRadius="10">
                                     <StackLayout Spacing="15">
 
-                                        <!-- Cadre pour le Nom de l'entreprise -->
-                                        <Frame BackgroundColor="LightGray" CornerRadius="10" Padding="10">
-                                            <StackLayout Orientation="Horizontal"> 
-                                                <Label Text="Nom de l'entreprise :" VerticalOptions="Center" HorizontalOptions="StartAndExpand"/>
-                                                <Label Text="{Binding Name}" VerticalOptions="Center" HorizontalOptions="EndAndExpand"/>
-                                            </StackLayout>
-                                        </Frame>
+                                        <StackLayout Orientation="Horizontal" Spacing="10">
+                                            <Label Text="Nom de l'événement :" FontSize="18" FontAttributes="Bold" TextColor="Orange"/>
+                                            <Label Text="{Binding Name}" FontSize="16" TextColor="Black"/>
+                                        </StackLayout>
 
-                                        <!-- Cadre pour la Ville -->
-                                        <Frame BackgroundColor="LightGray" CornerRadius="10" Padding="10">
-                                            <StackLayout Orientation="Horizontal">
-                                                <Label Text="Ville :" VerticalOptions="Center" HorizontalOptions="StartAndExpand"/>
-                                                <Label Text="{Binding Description}" VerticalOptions="Center" HorizontalOptions="EndAndExpand"/>
-                                            </StackLayout>
-                                        </Frame>
+                                        <StackLayout Orientation="Horizontal" Spacing="10">
+                                            <Label Text="Description :" FontSize="18" FontAttributes="Bold" TextColor="Orange"/>
+                                            <Label Text="{Binding Description}" FontSize="16" TextColor="Black"/>
+                                        </StackLayout>
 
-                                        <!-- Cadre pour la Description de l'emploi -->
-                                        <Frame BackgroundColor="LightGray" CornerRadius="10" Padding="10">
-                                            <StackLayout Orientation="Horizontal">
-                                                <Label Text="Description de l'emploi :" VerticalOptions="Center" HorizontalOptions="StartAndExpand"/>
-                                                <Label Text="{Binding Lieu}" VerticalOptions="Center" HorizontalOptions="EndAndExpand"/>
-                                            </StackLayout>
-                                        </Frame>
+                                        <StackLayout Orientation="Horizontal" Spacing="10">
+                                            <Label Text="Lieu :" FontSize="18" FontAttributes="Bold" TextColor="Orange"/>
+                                            <Label Text="{Binding Lieu}" FontSize="16" TextColor="Black"/>
+                                        </StackLayout>
 
-                                        <!-- Cadre pour Type d'offre et Secteur d'activité -->
-                                        <Grid Padding="10">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="Auto"/>
-                                            </Grid.RowDefinitions>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <Frame BackgroundColor="LightGray" CornerRadius="10" Padding="10">
-                                                <StackLayout Orientation="Horizontal">
-                                                    <Label Text="Type d'offre :" VerticalOptions="Center" HorizontalOptions="StartAndExpand"/>
-                                                    <Label Text="{Binding TypeOffre}" VerticalOptions="Center" HorizontalOptions="EndAndExpand"/>
-                                                </StackLayout>
-                                            </Frame>
-                                            <Frame BackgroundColor="LightGray" CornerRadius="10" Padding="10" Grid.Row="1">
-                                                <StackLayout Orientation="Horizontal">
-                                                    <Label Text="Secteur d'activité :" VerticalOptions="Center" HorizontalOptions="StartAndExpand"/>
-                                                    <Label Text="{Binding SecteurActivite}" VerticalOptions="Center" HorizontalOptions="EndAndExpand"/>
-                                                </StackLayout>
-                                            </Frame>
-                                        </Grid>
+                                        <StackLayout Orientation="Horizontal" Spacing="10">
+                                            <Label Text="Date de l'événement :" FontSize="18" FontAttributes="Bold" TextColor="Orange"/>
+                                            <Label Text="{Binding FormattedDate}" FontSize="16" TextColor="Black"/>
+                                        </StackLayout>
 
                                     </StackLayout>
-                                </ViewCell>
+                                </Frame>
                             </DataTemplate>
-                        </ListView.ItemTemplate>
-
-                    </ListView>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
                 </RefreshView>
+                <Label Text="{Binding PostInfo}" FontAttributes="Italic" TextColor="Gray" FontSize="14" HorizontalOptions="Center"/>
             </StackLayout>
         </Frame>
     </Grid>
-
 </ContentPage>
